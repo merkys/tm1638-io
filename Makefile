@@ -7,4 +7,4 @@ BIN_FILES = ${SRC_FILES:${SRC_DIR}/%.c=${BIN_DIR}/%}
 all: ${BIN_FILES}
 
 ${BIN_DIR}/%: ${SRC_DIR}/%.c
-	cc $< -o $@ -ltm1638
+	cc $< -o $@ -ltm1638 -lbcm2835
