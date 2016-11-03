@@ -1,0 +1,12 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+for( my $i = 0; $i < 8; $i++ ) {
+    my $a = (' ' x $i) . '0';
+    `bin/tm1638-write "$a"`;
+    sleep 1
+}
+
+`bin/tm1638-write FINISHEd`;
