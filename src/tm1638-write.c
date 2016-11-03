@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     }
 
     char text[10];
-    memcpy( text, argv[0], 8 );
+    memcpy( text, argv[1], 8 );
     text[9] = '\0';
 
     tm1638_set_7seg_text(t, text, 0x00);
