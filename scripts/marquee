@@ -1,0 +1,27 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my $out = 'bin/tm1638-write';
+
+while( <> ) {
+    my @words = split;
+    for( @words ) {
+         s/[^a-zA-Z0-9]//g;
+         next if !$_;
+         if( length() < 8 ) {
+             `$out "$_"`;
+             sleep 1;
+         } else {
+             while( length() >= 8 ) {
+                 my $txt = substr( $_, 0, 8 );
+                 `$out "$txt"`;
+                 $_ = substr( $_, 1 );
+                 sleep 1;
+             }
+         }
+    }
+    sleep 1;
+}
+`$out ""`;
