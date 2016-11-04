@@ -1,0 +1,2 @@
+# m   h dom mon dow   command
+  */5 * *   *   *     mysql -u cod_reader -h www.crystallography.net cod -e 'select count(*) from data where status is null or status != "retracted"' -N | sed 's/[^0-9]//' | xargs tm1638-write
