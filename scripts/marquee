@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-my $out = 'bin/tm1638-write';
+$| = 1; # autoflushing STDOUT
 
 while( <> ) {
     my @words = split;
@@ -11,12 +11,12 @@ while( <> ) {
          s/[^a-zA-Z0-9]//g;
          next if !$_;
          if( length() < 8 ) {
-             `$out "$_"`;
+             print $_, "\n";
              sleep 1;
          } else {
              while( length() >= 8 ) {
                  my $txt = substr( $_, 0, 8 );
-                 `$out "$txt"`;
+                 print $txt, "\n";
                  $_ = substr( $_, 1 );
                  sleep 1;
              }
@@ -24,4 +24,5 @@ while( <> ) {
     }
     sleep 1;
 }
-`$out ""`;
+
+print "\n";

@@ -3,10 +3,12 @@
 use strict;
 use warnings;
 
+$| = 1; # autoflushing STDOUT
+
 for( my $i = 0; $i < 8; $i++ ) {
     my $a = (' ' x $i) . '0';
-    `bin/tm1638-write "$a"`;
+    print $a, "\n";
     sleep 1
 }
 
-`bin/tm1638-write FINISHEd`;
+print "FINISHEd\n";
