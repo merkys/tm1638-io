@@ -8,11 +8,6 @@
 
 int main(int argc, char *argv[])
 {
-    if( argc < 1 ) {
-        printf( "Text up to 8 characters must be given\n" );
-        return -3;
-    }
-
     tm1638_p t;
 
     if( !bcm2835_init() ) {
@@ -27,11 +22,26 @@ int main(int argc, char *argv[])
         return -2;
     }
 
-    char text[10];
-    memcpy( text, argv[1], 8 );
-    text[9] = '\0';
-
-    tm1638_set_7seg_text(t, text, 0x00);
+    char text[9];
+    int i = 0;
+    while( !feof(stdin) ) {
+        char s = getchar();
+        if( s != '\n' ) {
+            if( i < 8 ) {
+                text[i] = s;
+            }
+            i++;
+        } else {
+            if( i < 9 ) {
+                text[i] = '\0';
+            } else {
+                text[8] = '\0';
+            }
+            tm1638_set_7seg_text(t, text, 0x00);
+            /* printf( "[%s]\n", text ); */
+            i = 0;
+        }
+    }
 
     return 0;
 }
