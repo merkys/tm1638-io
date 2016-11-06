@@ -8,10 +8,6 @@
 
 int main(int argc, char *argv[])
 {
-    if( argc < 1 ) {
-        /* printf( "Text up to 8 characters must be given\n" );
-        return -3; */
-    }
 
     tm1638_p t;
 
@@ -27,14 +23,19 @@ int main(int argc, char *argv[])
         return -2;
     }
 
-    tm1638_set_7seg_raw(t, 0,   1);
-    tm1638_set_7seg_raw(t, 1,   2);
-    tm1638_set_7seg_raw(t, 2,   4);
-    tm1638_set_7seg_raw(t, 3,   8);
-    tm1638_set_7seg_raw(t, 4,  16);
-    tm1638_set_7seg_raw(t, 5,  32);
-    tm1638_set_7seg_raw(t, 6,  64);
-    tm1638_set_7seg_raw(t, 7, 128);
+    int i;
+    for( i = 0; i < 8; i++ ) {
+        char val = 0;
+        if( argc > i+1 ) {
+            int j = 0;
+            while( argv[i+1][j] != '\0' && j < 8 ) {
+                val = val << 1;
+                val = val | (argv[i+1][j] - 48);
+                j++;
+            }
+        }
+        tm1638_set_7seg_raw(t, i, val);
+    }
 
     return 0;
 }
