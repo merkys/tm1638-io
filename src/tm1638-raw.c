@@ -23,18 +23,42 @@ int main(int argc, char *argv[])
         return -2;
     }
 
-    int i;
-    for( i = 0; i < 8; i++ ) {
-        char val = 0;
-        if( argc > i+1 ) {
-            int j = 0;
-            while( argv[i+1][j] != '\0' && j < 8 ) {
-                val = val << 1;
-                val = val | (argv[i+1][j] - 48);
-                j++;
-            }
+    int i = 0;
+    int j;
+    char val = 0;
+    while( !feof(stdin) ) {
+        char s = getchar();
+        switch( s ) {
+            case '\n':
+                if( i < 8 && val > 0 ) {
+                    tm1638_set_7seg_raw( t, i, val );
+                    /* printf( "[%u] ", val ); */
+                    i++;
+                }
+                for( j = i; j < 8; j++ ) {
+                    tm1638_set_7seg_raw( t, j, 0 );
+                    /* printf( "[0] " ); */
+                }
+                val = 0;
+                i = 0;
+                /* printf( "\n" ); */
+                break;
+            case '0':
+            case '1':
+                if( i < 8 ) {
+                    val = val << 1;
+                    val = val | ( s - 48 );
+                }
+                break;
+            case ' ':
+                if( i < 8 ) {
+                    tm1638_set_7seg_raw( t, i, val );
+                    /* printf( "[%u] ", val ); */
+                    val = 0;
+                    i++;
+                }
+                break;
         }
-        tm1638_set_7seg_raw(t, i, val);
     }
 
     return 0;
