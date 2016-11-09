@@ -12,14 +12,14 @@ int main(int argc, char *argv[])
 
     if( !bcm2835_init() ) {
         printf( "Unable to initialize BCM library\n" );
-        return -1;
+        return 1;
     }
 
     t = tm1638_alloc( 17, 27, 22 ); /* Used GPIO pins */
 
     if( !t ) {
         printf( "Unable to allocate TM1638\n" );
-        return -2;
+        return 2;
     }
 
     char text[9];
