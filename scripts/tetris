@@ -1,0 +1,78 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+my $piece = [ [ 1, 1 ], [ 1, 0 ] ];
+my $level = 0;
+
+my $field = [ [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ] ];
+
+while( <> ) {
+    if( /^l/i ) {
+        $piece = rotL( $piece );
+    }
+    if( /^r/i ) {
+        $piece = rotR( $piece );
+    }
+    if( /^d/i ) {
+        my $i;
+        for( $i = 0; $i < 6; $i++ ) {
+            next if !$field->[0][$i+2] && !$field->[1][$i+2];
+            last if $piece->[0][1] && $field->[0][$i+2];
+            last if $piece->[1][1] && $field->[1][$i+2];
+        }
+        $field->[0][$i]   = 1 if $piece->[0][0];
+        $field->[0][$i+1] = 1 if $piece->[0][1];
+        $field->[1][$i]   = 1 if $piece->[1][0];
+        $field->[1][$i+1] = 1 if $piece->[1][1];
+        # reduce( $field );
+    }
+    if( $piece ) {
+        print ' ' x $level . join( '', @{$piece->[0]} );
+        print join( '', @{$field->[0]}[$level..7] ), "\n";
+        print ' ' x $level . join( '', @{$piece->[1]} );
+        print join( '', @{$field->[1]}[$level..7] ), "\n";
+    } else {
+        print join( '', @{$field->[0]} ), "\n";
+        print join( '', @{$field->[1]} ), "\n";
+    }
+}
+
+sub rotL
+{
+    my( $piece ) = @_;
+    return [
+        [ $piece->[0][1], $piece->[1][1] ],
+        [ $piece->[0][0], $piece->[1][0] ],
+    ];
+}
+
+sub rotR
+{
+    my( $piece ) = @_;
+    return [
+        [ $piece->[1][0], $piece->[0][0] ],
+        [ $piece->[1][1], $piece->[0][1] ],
+    ];
+}
+
+sub reduce
+{
+    my( $field ) = @_;
+    my $src  = 7;
+    my $dest = 7;
+    while( $src >= 0 ) {
+        last if !$field->[0][$src] && !$field->[1][$src];
+        if( $field->[0][$src] && $field->[1][$src] ) {
+            $src--;
+            next;
+        }
+        if( $src != $dest ) {
+            $field->[0][$dest] = $field->[0][$src];
+            $field->[1][$dest] = $field->[1][$src];
+        }
+        $src--;
+        $dest--;
+    }
+}
