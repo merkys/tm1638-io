@@ -3,12 +3,16 @@
 use strict;
 use warnings;
 
+$| = 1; # autoflushing STDOUT
+
 my $piece = random_piece();
 my $level = 0;
 
 my $field = [ [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ] ];
 
-my $binary = 0;
+my $binary = 1;
+
+display( $field, $piece, $level, $binary );
 
 while( <> ) {
     if( /^l/i ) {
@@ -35,6 +39,15 @@ while( <> ) {
         $piece = random_piece();
     }
     display( $field, $piece, $level, $binary );
+
+    if( $field->[0][1] || $field->[1][1] ) {
+        if( $binary ) {
+            print '0 0 01110001 01110111 00110000 00111000', "\n";
+        } else {
+            print "FAIL\n";
+        }
+        exit;
+    }
 }
 
 sub rotL
@@ -87,7 +100,7 @@ sub display
                 $val = $val | 0x5c if $piece->[1][$_]; # bottom piece
                 printf( '%08b ', $val );
             }
-            for ($level..7) {
+            for ($level+2..7) {
                 my $val = 0;
                 $val = $val | 0x63 if $field->[0][$_]; # top piece
                 $val = $val | 0x5c if $field->[1][$_]; # bottom piece
