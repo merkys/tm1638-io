@@ -3,12 +3,12 @@
 use strict;
 use warnings;
 
-my $piece = [ [ 1, 1 ], [ 1, 0 ] ];
+my $piece = random_piece();
 my $level = 0;
 
 my $field = [ [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ] ];
 
-my $binary = 1;
+my $binary = 0;
 
 while( <> ) {
     if( /^l/i ) {
@@ -29,6 +29,7 @@ while( <> ) {
         $field->[1][$i]   = 1 if $piece->[1][0];
         $field->[1][$i+1] = 1 if $piece->[1][1];
         # reduce( $field );
+        $piece = random_piece();
     }
     display( $field, $piece, $level, $binary );
 }
@@ -109,4 +110,17 @@ sub display
         }
     }
     print "\n" if $binary;
+}
+
+sub random_piece
+{
+    my $piece = [ [ 1, 0 ], [ 0, 0 ] ];
+    $piece->[0][1] += (rand() > 0.5);
+    $piece->[1][0] += (rand() > 0.5);
+    $piece->[1][1] += (rand() > 0.5);
+
+    for (0..int(rand()*4)) {
+        $piece = rotL( $piece );
+    }
+    return $piece;
 }
