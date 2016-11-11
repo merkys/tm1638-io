@@ -8,6 +8,8 @@ my $level = 0;
 
 my $field = [ [ 0, 0, 0, 0, 0, 0, 0, 0 ], [ 0, 0, 0, 0, 0, 0, 0, 0 ] ];
 
+my $binary = 1;
+
 while( <> ) {
     if( /^l/i ) {
         $piece = rotL( $piece );
@@ -28,15 +30,7 @@ while( <> ) {
         $field->[1][$i+1] = 1 if $piece->[1][1];
         # reduce( $field );
     }
-    if( $piece ) {
-        print ' ' x $level . join( '', @{$piece->[0]} );
-        print join( '', @{$field->[0]}[$level..7] ), "\n";
-        print ' ' x $level . join( '', @{$piece->[1]} );
-        print join( '', @{$field->[1]}[$level..7] ), "\n";
-    } else {
-        print join( '', @{$field->[0]} ), "\n";
-        print join( '', @{$field->[1]} ), "\n";
-    }
+    display( $field, $piece, $level, $binary );
 }
 
 sub rotL
@@ -75,4 +69,44 @@ sub reduce
         $src--;
         $dest--;
     }
+}
+
+sub display
+{
+    my( $field, $piece, $level, $binary ) = @_;
+    if( $piece ) {
+        if( $binary ) {
+            print '00000000 ' x $level;
+            for (0..1) {
+                my $val = 0;
+                $val = $val | 0x63 if $piece->[0][$_]; # top piece
+                $val = $val | 0x5c if $piece->[1][$_]; # bottom piece
+                printf( '%08b ', $val );
+            }
+            for ($level..7) {
+                my $val = 0;
+                $val = $val | 0x63 if $field->[0][$_]; # top piece
+                $val = $val | 0x5c if $field->[1][$_]; # bottom piece
+                printf( '%08b ', $val );
+            }
+        } else {
+            print ' ' x $level . join( '', @{$piece->[0]} );
+            print join( '', @{$field->[0]}[$level..7] ), "\n";
+            print ' ' x $level . join( '', @{$piece->[1]} );
+            print join( '', @{$field->[1]}[$level..7] ), "\n";
+        }
+    } else {
+        if( $binary ) {
+            for (0..7) {
+                my $val = 0;
+                $val = $val | 0x63 if $field->[0][$_]; # top piece
+                $val = $val | 0x5c if $field->[1][$_]; # bottom piece
+                printf( '%08b ', $val );
+            }
+        } else {
+            print join( '', @{$field->[0]} ), "\n";
+            print join( '', @{$field->[1]} ), "\n";
+        }
+    }
+    print "\n" if $binary;
 }
