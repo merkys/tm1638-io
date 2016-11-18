@@ -15,13 +15,13 @@ my $binary = 1;
 display( $field, $piece, $level, $binary );
 
 while( <> ) {
-    if( /^l/i ) {
+    if( /^l/i || /^BUTTON\t3\tRELEASE/ ) {
         $piece = rotL( $piece );
     }
-    if( /^r/i ) {
+    if( /^r/i || /^BUTTON\t1\tRELEASE/) {
         $piece = rotR( $piece );
     }
-    if( /^d/i ) {
+    if( /^d/i || /^BUTTON\t0\tRELEASE/) {
         if( !$piece->[0][1] && !$piece->[1][1] ) {
             $piece = [ [ 0, $piece->[0][0] ], [ 0, $piece->[1][0] ] ];
         }
