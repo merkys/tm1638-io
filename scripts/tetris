@@ -35,7 +35,7 @@ while( <> ) {
         $field->[0][$i+1] = 1 if $piece->[0][1];
         $field->[1][$i]   = 1 if $piece->[1][0];
         $field->[1][$i+1] = 1 if $piece->[1][1];
-        # reduce( $field );
+        reduce( $field );
         $piece = random_piece();
     }
     display( $field, $piece, $level, $binary );
@@ -71,20 +71,11 @@ sub rotR
 sub reduce
 {
     my( $field ) = @_;
-    my $src  = 7;
-    my $dest = 7;
-    while( $src >= 0 ) {
-        last if !$field->[0][$src] && !$field->[1][$src];
-        if( $field->[0][$src] && $field->[1][$src] ) {
-            $src--;
-            next;
-        }
-        if( $src != $dest ) {
-            $field->[0][$dest] = $field->[0][$src];
-            $field->[1][$dest] = $field->[1][$src];
-        }
-        $src--;
-        $dest--;
+    for( my $i = 7; $i >= 0; $i-- ) {
+        next unless $field->[0][$i] && $field->[1][$i];
+        $field->[0] = [ 0, @{$field->[0]}[0..$i-1], @{$field->[0]}[$i+1..7] ];
+        $field->[1] = [ 0, @{$field->[1]}[0..$i-1], @{$field->[1]}[$i+1..7] ];
+        redo;
     }
 }
 
