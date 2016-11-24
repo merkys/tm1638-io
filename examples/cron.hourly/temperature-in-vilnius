@@ -1,0 +1,14 @@
+#!/bin/bash
+#------------------------------------------------------------------------------
+#* Prints the temperature (in C) in Vilnius International Airport (VNO,
+#* EYVI). The script can be applied to monitor any other airport by
+#* setting a different value for $ICAO parameter.
+#------------------------------------------------------------------------------
+
+ICAO=EYVI
+
+curl -s 'https://www.aviationweather.gov/metar/data?ids='${ICAO}'&format=decoded&date=0&hours=0' \
+    | grep Temperature: \
+    | head -n 1 \
+    | perl -lne 'print $1 if /\s+(-?\d+)\.\d+&deg/' \
+    | tm1638-write
