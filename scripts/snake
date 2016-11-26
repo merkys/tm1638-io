@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+$| = 1; # autoflushing STDOUT
+
+my $field = [ 1, 0, 0, 0, 0, 0, 0, 0 ];
+
+my $xnow = 0;
+my $ynow = 1;
+
+while( <> ) {
+    if( /^l/i || /^BUTTON\t3\tRELEASE/ ) {
+        next if $xnow <= 0;
+        $xnow--;
+        $field->[$xnow] = $field->[$xnow] | $ynow;
+    }
+    if( /^r/i || /^BUTTON\t1\tRELEASE/) {
+        next if $xnow >= 7;
+        $field->[$xnow] = $field->[$xnow] | $ynow;
+        $xnow++;
+    }
+    if( /^d/i || /^BUTTON\t0\tRELEASE/) {
+        if(      $ynow == 2**0 ) {
+            $ynow = 2**6;
+            $field->[$xnow-1] = $field->[$xnow-1] | 2**1;
+        } elsif( $ynow == 2**6 ) {
+            $ynow = 2**3;
+            $field->[$xnow-1] = $field->[$xnow-1] | 2**2;
+        }
+    }
+    if( /^u/i || /^BUTTON\t2\tRELEASE/) {
+        if(      $ynow == 2**6 ) {
+            $ynow = 2**0;
+            $field->[$xnow] = $field->[$xnow] | 2**1;
+        } elsif( $ynow == 2**3 ) {
+            $ynow = 2**6;
+            $field->[$xnow] = $field->[$xnow] | 2**2;
+        }
+    }
+    draw( $field );
+}
+
+sub draw
+{
+    my( $field ) = @_;
+    for my $i (0..7) {
+        printf( '%08b ', $field->[$i] );
+    }
+    print "\n";
+}
