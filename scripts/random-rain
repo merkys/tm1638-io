@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Time::HiRes qw( nanosleep );
+
+$| = 1; # autoflushing STDOUT
+
+my $field = [ 0, 0, 0, 0, 0, 0, 0, 0 ];
+
+while( 1 ) {
+    $field->[int(rand(8))] = $field->[int(rand(8))] ^ 2**int(rand(7));
+    draw( $field );
+    nanosleep 1e8;
+}
+
+sub draw
+{
+    my( $field ) = @_;
+    for my $i (0..7) {
+        printf( '%08b ', $field->[$i] );
+    }
+    print "\n";
+}
