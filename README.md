@@ -26,3 +26,8 @@ replacing ``tm1638_alloc( 17, 27, 22 )`` with
 Just ``make`` and adjust the permissions. Usually, GPIO can be accessed
 by users from group ``gpio``, so one either needs to be in that group or
 make scripts in ``bin/`` setgid.
+
+What's next?
+------------
+
+Check out the [examples](examples) and [scripts](scripts).
